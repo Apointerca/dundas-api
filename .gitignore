@@ -1,0 +1,5 @@
+*.swp
+client.apib
+review.apib
+index.apib
+authentication.apib
