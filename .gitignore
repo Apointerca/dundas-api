@@ -3,3 +3,4 @@ client.apib
 review.apib
 index.apib
 authentication.apib
+user.apib

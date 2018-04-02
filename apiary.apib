@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://apointer.com
+HOST: http://apointer.ca
 
 # API documentation for Dundas
 
@@ -41,6 +41,8 @@ HTTP request method not found.
 ### 406
 The request parameters and headers not acceptable.  
 Please change it according to documentation.  
+### 409
+Usually happens when creating a resource that already exists.  
 
 # Data Structure
 
@@ -51,34 +53,77 @@ Please change it according to documentation.
 
 # Data Structure
 
-### Authentication Request (object)
+### Create User Request (object)
 + email: `test@apointer.ca` (string, required)
-+ password: `mypassword` (string, required)
++ last_name: `Bernstein` (string, required)
++ first_name: `Rugal` (string, required)
 
 ### Authentication Response (object)
 + token: `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhdXRoZW50aWNhdGlvblRva2VuIiwiaXNzIjoiZHVuZGFzIiwidWlkIjoxMjMsImV4cCI6MTUyMjAzNzY3Mn0.hJvdKc8U0lNAre0Mhvo1U6BoBxuCU8CNf234Yo_Pus_M-BmuFUM5u6li_gFT4q5BBf17XCpfroybqAbtGAONZQ` (string, required)
-+ role: `2` (enum[number], required) - role of login user
-  + Default: `0`
-  + Members
-    + `0` - Member
-    + `1` - Employee
-    + `2` - Owner
-
 + expiration: `1396572606` (number, required) - The expiration time in Unix Epoch format
++ last_name: `Bernstein` (string, required)
++ first_name: `Rugal` (string, required)
++ avatar: `http://host/path` (string, optional) - The URL of avatar
 
-# Group Authentication
+### Create Employee Request (Create User Request)
++ password: `mypassword` (string, required)
 
-## Create User JWT [/user/token]
+### Create Customer Request (Create User Request)
++ password: `mypassword` (string, optional) - Leave it null or blank if it is an anonymous customer
 
-### Create User JWT [POST]
+### Customer Token Request (object)
++ email: `test@apointer.ca` (string, required)
++ password: `mypassword` (string, optional) - Leave it null or blank if it is an anonymous customer
 
+### Employee Token Request (Customer Token Request)
++ password: `mypassword` (string, required)
+
+# Group Create User
+
+## Employee [/employee]
+
+### Create Employee [POST]
 + request
-    + Headers
 
-            Origin: https://business.apointer.ca
-
-    + Attributes (Authentication Request)
+    + Attributes (Create Employee Request)
 
 + response 201
+
+    + Attributes (Authentication Response)
+
+## Customer [/customer]
+
+### Create Customer [POST]
++ request
+
+    + Attributes (Create Customer Request)
+
++ response 201
+
+    + Attributes (Authentication Response)
+
+# Group User Login
+
+## Employee Token [/employee/token]
+
+### Create Authentication Token [POST]
++ request
+
+    + Attributes (Employee Token Request)
+
++ response 201
+
+    + Attributes (Authentication Response)
+
+## Customer Token [/customer/token]
+Only registered customer can login in this way.
+
+### Create Authentication Token [POST]
++ request
+
+    + Attributes (Customer Token Request)
+
++ response 201
+
     + Attributes (Authentication Response)
 
