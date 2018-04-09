@@ -55,14 +55,14 @@ Usually happens when creating a resource that already exists.
 
 ### Create User Request (object)
 + email: `test@apointer.ca` (string, required)
-+ last_name: `Bernstein` (string, required)
-+ first_name: `Rugal` (string, required)
++ lastName: `Bernstein` (string, required)
++ firstName: `Rugal` (string, required)
 
 ### Authentication Response (object)
 + token: `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhdXRoZW50aWNhdGlvblRva2VuIiwiaXNzIjoiZHVuZGFzIiwidWlkIjoxMjMsImV4cCI6MTUyMjAzNzY3Mn0.hJvdKc8U0lNAre0Mhvo1U6BoBxuCU8CNf234Yo_Pus_M-BmuFUM5u6li_gFT4q5BBf17XCpfroybqAbtGAONZQ` (string, required)
 + expiration: `1396572606` (number, required) - The expiration time in Unix Epoch format
-+ last_name: `Bernstein` (string, required)
-+ first_name: `Rugal` (string, required)
++ lastName: `Bernstein` (string, required)
++ firstName: `Rugal` (string, required)
 + avatar: `http://host/path` (string, optional) - The URL of avatar
 
 ### Create Employee Request (Create User Request)
@@ -106,7 +106,7 @@ Usually happens when creating a resource that already exists.
 
 ## Employee Token [/employee/token]
 
-### Create Authentication Token [POST]
+### Employee Login [POST]
 + request
 
     + Attributes (Employee Token Request)
@@ -118,12 +118,19 @@ Usually happens when creating a resource that already exists.
 ## Customer Token [/customer/token]
 Only registered customer can login in this way.
 
-### Create Authentication Token [POST]
+### Customer Login [POST]
 + request
 
     + Attributes (Customer Token Request)
 
++ response 200
+This indicates the user is an existing unregistered customer.  
+So the old user information will be overriden by the new information.  
+
+    + Attributes (Authentication Response)
+
 + response 201
+This indicates the user is a registered customer.  
 
     + Attributes (Authentication Response)
 
