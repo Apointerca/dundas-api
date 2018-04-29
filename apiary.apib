@@ -4,45 +4,45 @@ HOST: http://apointer.ca
 # API documentation for Dundas
 
 # Group General
-Please refer to [Decision Graph](http://clojure-liberator.github.io/liberator/assets/img/decision-graph.svg) for details.  
+Please refer to [Decision Graph](http://clojure-liberator.github.io/liberator/assets/img/decision-graph.svg) for details.
 
 ## General HTTP status code
-As HTTP status code contains a lot of information, here we demonstration some of them so we can use them directly in our response.  
+As HTTP status code contains a lot of information, here we demonstrate some of them, so we can use them directly in our response.
 
 ### 200
-This is the most common status code. It basically means things are going well.  
-But usually it returns together with response body.  
-Mostly for `GET` request.  
+This is the most common status code. It basically means things are going well.
+But usually it returns together with response body.
+Mostly for `GET` request.
 
 ### 201
-This status code indicates the requested resource has been created.  
-Response body should be returned together.  
-Mostly for `POST` request.  
+This status code indicates the requested resource has been created.
+Response body should be returned together.
+Mostly for `POST` request.
 
 ### 204
-Similar to `200`, but nothing would come together with this status.  
-Mostly for `DELETE` and `PUT` requests.  
+Similar to `200`, but nothing would come together with this status.
+Mostly for `DELETE` and `PUT` requests.
 
 ## General HTTP status error code
 
-To avoid redundent error code declaration, here we list all the default meaning of corresponding error code.  
-Please explicitly in each response if the response is different from what state here.  
+To avoid redundent error code declaration, here we list all the default meaning of corresponding error code.
+Please explicitly describe in each response if the meaning is different from what we state here.
 
 ### 400
-Malformed request, this request is reported.  
+Malformed request, this request is reported.
 ### 401
-This request is not authorized.  
+This request is not authorized.
 ### 403
-This request doesn't have permission to access the resource.  
+This request doesn't have permission to access the resource.
 ### 404
-The target resource not found.  
+The target resource is not found.
 ### 405
-HTTP request method not found.  
+HTTP request method is not allowed.
 ### 406
-The request parameters and headers not acceptable.  
-Please change it according to documentation.  
+The request parameters and headers not acceptable.
+Please change it according to documentation.
 ### 409
-Usually happens when creating a resource that already exists.  
+Usually happens when creating a resource that already exists.
 
 # Data Structure
 
@@ -124,13 +124,106 @@ Only registered customer can login in this way.
     + Attributes (Customer Token Request)
 
 + response 200
-This indicates the user is an existing unregistered customer.  
-So the old user information will be overriden by the new information.  
+This indicates the user is an existing unregistered customer.
+So the old user information will be overriden by the new information.
 
     + Attributes (Authentication Response)
 
 + response 201
-This indicates the user is a registered customer.  
+This indicates the user is a registered customer.
 
     + Attributes (Authentication Response)
 
+# Group Activate Account
+
+## Employee Account [/employee/activate/{activationCode}]
++ Parameters
+
+    + activationCode (String) - An activation code that is used to activate a employee account
+
+### Activate Employee Account [PATCH]
++ response 200
+This indicates the activation code is valid.
+Thus, the employee account associated with it is successfully activated.
+
+    + Body
+
++ response 405
+This indicates the employee account associated with the supplied activation code failed
+to be activated. This is due to one of the following reasons:
+
+    - The activation code is malformed.
+    - The employee account associated with this activation code does not exist.
+    - The activation code has already expired.
+    - This employee account associated with this activation code does exists.
+      However, its current account status does not permit account activation.
+
+    + Body
+
+## Customer Account [/customer/activate/{activationCode}]
++ Parameters
+
+    + activationCode (String) - An activation code that is used to activate a customer account
+
+### Activate Customer Account [PATCH]
++ response 200
+This indicates the activation code is valid.
+Thus, the customer account associated with it is successfully activated.
+
+    + Body
+
++ response 405
+This indicates the customer account associated with the supplied activation code failed
+to be activated. This is due to one of the following reasons:
+
+    - The activation code is malformed.
+    - The customer account associated with this activation code does not exist.
+    - The activation code has already expired.
+    - This customer account associated with this activation code does exists.
+      However, its current account status does not permit account activation.
+
+    + Body
+
+# Group Forgot Password
+
+## Employee Password [/employee/resetpassword/{email}]
++ Parameters
+
+    + email (String) - The email address of a registered employee
+
+### Reset Employee Account Password [PATCH]
++ response 200
+This indicates the password for the account associated with this email is reset successfully.
+New password is emailed to this employee.
+
+    + Body
+
++ response 405
+This indicates the password cannot be reset for the account associated with this email.
+It is due to the following reasons:
+
+    - There is no employee account associated with this email exists.
+    - The account associated with this email does exist. However, it is currently not active.
+
+    + Body
+
+## Customer Password [/customer/resetpassword/{email}]
++ Parameters
+
+    + email (String) - The email address of a registered customer
+
+### Reset Customer Account Password [PATCH]
++ response 200
+This indicates the password for the account associated with this email is reset successfully.
+New password is emailed to this customer.
+
+    + Body
+
++ response 405
+This indicates the password cannot be reset for the account associated with this email.
+It is due to the following reasons:
+
+    - There is no employee account associated with this email exists.
+    - The account associated with this email does exist. However, it is currently not active.
+
+    + Body
