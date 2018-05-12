@@ -53,6 +53,74 @@ Usually happens when creating a resource that already exists.
 
 # Data Structure
 
+### New Address (object)
++ line1: `1 Concord Gate` (string) - The new address line 1
++ line2: `Unit 400` (string) - The new address line 2
++ city: `Toronto` (string) - The new city where this address belongs to
++ province: `ON` (string) - The new province where this address belongs to
++ zip: `M1N3H8` (string) - The new postal code of this address
+
+### Existing Address (object)
++ aid: 1 (number) - The aid of an existing address
++ line1: `1 Concord Gate` (string) - The address line 1
++ line2: `Unit 400` (string) - The address line 2
++ city: `Toronto` (string) - The city where this address belongs to
++ province: `ON` (string) - The province where this address belongs to
++ zip: `M1N3H8` (string) - The postal code of this address
+
+### Get Employee Details Response (object)
++ uid: 1 (number, required) - The uid of an existing user
++ email: `test@apointer.ca` (string, required) - The email of an existing user
++ avatar: `https://s3.amazonaws.com/bucket/path/avatar.png` (string) - The avatar of an existing user
++ phone: `6477789563` (string) - The phone number of an existing user
++ firstName: `Jasper` (string, required) - The first name of an existing user
++ lastName: `Zhao` (string, required) - The last name of an existing user
++ gender: `true` (boolean, required) - The gender of an existing user (true - Male, false - Female)
++ dob: 1241574849 (number) - The date of birth of an existing user in Unix timestamp
++ status: 1 (number, required) - The status of an existing user account (0 - Not Activated, 1 - Activated, 2 - Locked, 3 - Inactive)
++ address (Existing Address) - The address of an existing user account
+
+### Get Customer Details Response (Get Employee Details Response)
++ credit: 100 (number, required) - The new credit of an existing customer at Apointer.ca
++ registered: `true` (boolean, required) - The new registration status of an exisitng customer (true - registered, false - unregistered)
+
+### Update Employee Details Request (object)
++ email: `newemail@apointer.ca` (string) - The new email of an existing user
++ password: `apointerissoawesome` (string) - The new password of an existing user
++ avatar: `https://s3.amazonaws.com/bucket/path/newavatar.png` (string) - The new avatar of an existing user
++ phone: `4163589950` (string) - The new phone number of an existing user
++ firstName: `Olivia` (string) - The new firstName of an existing user
++ lastName: `Cooke` (string) - The new lastName of an existing user
++ gender: `false` (boolean) - The new gender of an existing user (true - Male, false - Female))
++ dob: 1452893216 (number) - The new date of birth of an existing user in Unix timestamp
++ status: 2 (number) - The new status of an existing user account
++ address (New Address) - The new address of an existing user
+
+### Update Customer Details Request (Update Employee Details Request)
++ credit: 300 (number) - The new credit of an existing customer at Apointer.ca
++ registered: `false` (boolean) - The registration status of an existing customer (true - registered, false - unregistered)
+
+### Create Reset Password Code Request (object)
++ email: `test@apointer` (string, required) - The email address of a user
+
+### Reset Password Request (object)
++ resetPasswordCode: `MToxNTI0OTQ4NDE0` (string, required) - A reset password code which was sent out previously
++ newPassword: `apointerca` (string, required) - A new password which a user wants to set to
+
+### Create Account Response (object)
++ uid: 1 (number, required) - The unique uid of an user
+
+### Create Employee Response (Create Account Response)
++ email: `test@apointer.ca` (string, required) - The email of an existing user
++ avatar: `https://s3.amazonaws.com/bucket/path/avatar.png` (string) - The avatar of an existing user
++ phone: `6477789563` (string) - The phone number of an existing user
++ firstName: `Jasper` (string, required) - The first name of an existing user
++ lastName: `Zhao` (string, required) - The last name of an existing user
++ gender: `true` (boolean, required) - The gender of an existing user (true - Male, false - Female)
++ dob: 1241574849 (number) - The date of birth of an existing user in Unix timestamp
++ status: 1 (number, required) - The status of an existing user account (0 - Not Activated, 1 - Activated, 2 - Locked, 3 - Inactive)
++ address (Existing Address) - The address of an existing user account
+
 ### Create User Request (object)
 + email: `test@apointer.ca` (string, required)
 + lastName: `Bernstein` (string, required)
@@ -71,12 +139,12 @@ Usually happens when creating a resource that already exists.
 ### Create Customer Request (Create User Request)
 + password: `mypassword` (string, optional) - Leave it null or blank if it is an anonymous customer
 
-### Customer Token Request (object)
+### Token Request (object)
 + email: `test@apointer.ca` (string, required)
-+ password: `mypassword` (string, optional) - Leave it null or blank if it is an anonymous customer
-
-### Employee Token Request (Customer Token Request)
 + password: `mypassword` (string, required)
+
+### Activation Request
++ activationCode: `MToxNTI0OTQ4NDE0` (string, required) - An activation code that is used to activate an account
 
 # Group Create User
 
@@ -88,8 +156,18 @@ Usually happens when creating a resource that already exists.
     + Attributes (Create Employee Request)
 
 + response 201
+An employee account has been created.\
+\
+The details of the newly created employee is returned.
 
-    + Attributes (Authentication Response)
+    + Attributes (Get Employee Details Response)
+
++ response 200
+An employee account already exists.\
+\
+The details of the existing employee is returned.
+
+    + Attributes (Get Employee Details Response)
 
 ## Customer [/customer]
 
@@ -99,8 +177,25 @@ Usually happens when creating a resource that already exists.
     + Attributes (Create Customer Request)
 
 + response 201
+A customer account has been created.\
+\
+The details of the newly created customer is returned.
 
-    + Attributes (Authentication Response)
+    + Attributes (Get Customer Details Response)
+
++ response 302
+An employee account already exists under the same email.\
+\
+The uid of the existing employee is returned.
+
+    + Attributes (Create Account Response)
+
++ response 409
+A customer account already exists under the same email.\
+\
+The uid of the existing customer is returned.
+
+    + Attributes (Create Account Response)
 
 # Group User Login
 
@@ -109,11 +204,27 @@ Usually happens when creating a resource that already exists.
 ### Employee Login [POST]
 + request
 
-    + Attributes (Employee Token Request)
+    + Attributes (Token Request)
 
 + response 201
+A JWT token has been successfully created.
 
     + Attributes (Authentication Response)
+
++ response 401
+Password verification failed for the requested employee.
+
+    + Body
+
++ response 404
+The requested employee does not exists.
+
+    + Body
+
++ response 406
+The requested employee account is not activated.
+
+    + Body
 
 ## Customer Token [/customer/token]
 Only registered customer can login in this way.
@@ -121,109 +232,300 @@ Only registered customer can login in this way.
 ### Customer Login [POST]
 + request
 
-    + Attributes (Customer Token Request)
-
-+ response 200
-This indicates the user is an existing unregistered customer.
-So the old user information will be overriden by the new information.
-
-    + Attributes (Authentication Response)
+    + Attributes (Token Request)
 
 + response 201
-This indicates the user is a registered customer.
+A JWT token has been successfully created.
 
     + Attributes (Authentication Response)
 
-# Group Activate Account
-
-## Employee Account [/employee/activate/{activationCode}]
-+ Parameters
-
-    + activationCode (String) - An activation code that is used to activate a employee account
-
-### Activate Employee Account [PATCH]
-+ response 200
-This indicates the activation code is valid.
-Thus, the employee account associated with it is successfully activated.
++ response 401
+Password verfication failed for the requested customer.
 
     + Body
 
-+ response 405
-This indicates the employee account associated with the supplied activation code failed
-to be activated. This is due to one of the following reasons:
-
-    - The activation code is malformed.
-    - The employee account associated with this activation code does not exist.
-    - The activation code has already expired.
-    - This employee account associated with this activation code does exists.
-      However, its current account status does not permit account activation.
++ response 404
+The requested customer does not exists.
 
     + Body
 
-## Customer Account [/customer/activate/{activationCode}]
-+ Parameters
-
-    + activationCode (String) - An activation code that is used to activate a customer account
-
-### Activate Customer Account [PATCH]
-+ response 200
-This indicates the activation code is valid.
-Thus, the customer account associated with it is successfully activated.
-
-    + Body
-
-+ response 405
-This indicates the customer account associated with the supplied activation code failed
-to be activated. This is due to one of the following reasons:
-
-    - The activation code is malformed.
-    - The customer account associated with this activation code does not exist.
-    - The activation code has already expired.
-    - This customer account associated with this activation code does exists.
-      However, its current account status does not permit account activation.
++ response 406
+The requested customer account is not activated.
 
     + Body
 
 # Group Forgot Password
 
-## Employee Password [/employee/resetpassword/{email}]
-+ Parameters
+## Employee Password [/employee/resetpassword/]
 
-    + email (String) - The email address of a registered employee
+### Create Reset Password Code [POST]
+Sent a reset password code to a registered employee
 
-### Reset Employee Account Password [PATCH]
++ request
+
+    + Attributes (Create Reset Password Code Request)
+
 + response 200
-This indicates the password for the account associated with this email is reset successfully.
-New password is emailed to this employee.
+Password reset code is sent out successfully.
 
     + Body
 
-+ response 405
-This indicates the password cannot be reset for the account associated with this email.
-It is due to the following reasons:
-
-    - There is no employee account associated with this email exists.
-    - The account associated with this email does exist. However, it is currently not active.
++ response 406
+Password reset code failed to be sent out.
 
     + Body
 
-## Customer Password [/customer/resetpassword/{email}]
-+ Parameters
+### Reset Account Password [PUT]
+Reset password for a registered employee
 
-    + email (String) - The email address of a registered customer
++ request
 
-### Reset Customer Account Password [PATCH]
+    + Attributes (Reset Password Request)
+
 + response 200
-This indicates the password for the account associated with this email is reset successfully.
-New password is emailed to this customer.
+Password resets successfully
 
     + Body
 
-+ response 405
-This indicates the password cannot be reset for the account associated with this email.
-It is due to the following reasons:
-
-    - There is no employee account associated with this email exists.
-    - The account associated with this email does exist. However, it is currently not active.
++ response 400
+Request body contains either invalid resetPasswordCode or newPassword
 
     + Body
+
++ response 406
+Password failed to be reset
+
+    + Body
+
+## Customer Password [/customer/resetpassword/]
+
+### Create Reset Password Code [POST]
+Sent a reset password code to a registered customer
+
++ request
+
+    + Attributes (Create Reset Password Code Request)
+
++ response 200
+Password reset code is sent out successfully.
+
+    + Body
+
++ response 406
+Password reset code failed to be sent out.
+
+    + Body
+
+### Reset Account Password [PUT]
+Reset password for a registered customer
+
++ request
+
+    + Attributes (Reset Password Request)
+
++ response 200
+Password resets successfully
+
+    + Body
+
++ response 400
+Request body contains either invalid resetPasswordCode or newPassword
+
+    + Body
+
++ response 406
+Password failed to be reset
+
+    + Body
+
+# Group Activate Account
+
+## Employee Account [/employee/activation]
+
+### Activate Employee Account [PUT]
+Based on an activation code to activate an employee account
+
++ request
+
+    + Attributes (Activation Request)
+
++ response 200
+The account is successfully activated.
+
+    + Body
+
++ response 406
+The account cannot be activated.
+
+    + Body
+
+## Customer Account [/customer/activation]
+
+### Activate Customer Account [PUT]
+Based on an activation code to activate a customer account
+
++ request
+
+    + Attributes (Activation Request)
+
++ response 200
+The account is successfully activated.
+
+    + Body
+
++ response 406
+The account cannot be activated.
+
+    + Body
+
+# Group Account Details
+
+## Employee Details [/employee]
+
+### Get Details [GET]
+Return the information details of an existing employee
+
++ request
+
+    + Headers
+
+            JWT_USER_ID: 1 - The uid of an existing employee
+            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 400
+The Jwt Token header metadata inside the Http header is malformed
+
+    + Body
+
++ response 401
+The Jwt token header metadata is not valid
+
+    + Body
+
++ response 404
+The requested employee does not exists
+
+    + Body
+
++ response 200
+The requested employee is found and his/her details are returned
+
+    + Attributes (Get Employee Details Response)
+
+### Update Details [PUT]
+Update the information of an existing employee
+
++ request
+
+    + Attributes (Update Employee Details Request)
+
+    + Headers
+
+            JWT_USER_ID: 1 - The uid of an existing employee
+            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 400
+The Jwt Token header metadata inside the Http header is malformed
+
+    + Body
+
++ response 401
+The Jwt token header metadata is not valid
+
+    + Body
+
++ response 404
+The employee requires information update does not exists
+
+    + Body
+
++ response 201
+The information of an existing employee with uid the same as JWT_USER_ID in the HTTP header is updated
+
+    + Body
+
+## Customer Details [/customer]
+
+### Get Details [GET]
+Return the information details of an existing customer
+
++ request
+
+    + Headers
+
+            JWT_USER_ID: 1 - The uid of an existing customer
+            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 400
+The Jwt Token header metadata inside the Http header is malformed
+
+    + Body
+
++ response 401
+The Jwt token header metadata is not valid
+
+    + Body
+
++ response 404
+The requested employee does not exists
+
+    + Body
+
++ response 200
+The requested customer is found and his/her details are returned
+
+    + Attributes (Get Customer Details Response)
+
+### Update Details [PUT]
+Update the information of an existing customer
+
++ request
+
+    + Attributes (Update Customer Details Request)
+
+    + Headers
+
+            JWT_USER_ID: 1 - The uid of an existing customer
+            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 400
+The Jwt Token header metadata inside the Http header is malformed
+
+    + Body
+
++ response 401
+The Jwt token header metadata is not valid
+
+    + Body
+
++ response 404
+The employee requires information update does not exists
+
+    + Body
+
++ response 201
+The information of an existing customer with uid the same as JWT_USER_ID in the HTTP header is updated
+
+    + Body
+
+# Group Convert Account
+
+## Customer Account [/employee]
+
+### Convert Employee Account [POST]
+Make an existing employee account to also be a customer account
+
++ request
+
+    + Attributes (Create Account Response)
+
++ response 201
+A customer account is successfully created from the existing employee account
+
+    + Body
+
++ response 406
+Failed to create a customer account using the existing employee account
+
+    + Body
+
