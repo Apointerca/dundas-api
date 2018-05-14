@@ -53,6 +53,9 @@ Usually happens when creating a resource that already exists.
 
 # Data Structure
 
+### Get A List Of Users Request (object)
++ uids: 1 (array[number], required) - A list of uids of some existing users
+
 ### New Address (object)
 + line1: `1 Concord Gate` (string) - The new address line 1
 + line2: `Unit 400` (string) - The new address line 2
@@ -134,7 +137,7 @@ Usually happens when creating a resource that already exists.
 + avatar: `http://host/path` (string, optional) - The URL of avatar
 
 ### Create Employee Request (Create User Request)
-+ password: `mypassword` (string, required)
++ password: `mypassword` (string, optional) - Leave it null or blank if it is a newly registered employee
 
 ### Create Customer Request (Create User Request)
 + password: `mypassword` (string, optional) - Leave it null or blank if it is an anonymous customer
@@ -380,7 +383,26 @@ The account cannot be activated.
 
 # Group Account Details
 
-## Employee Details [/employee]
+## Some Employees' Details [/employee/list]
+
+### Get a List of Employees' Details [POST]
+Return the information details of a list of existing employees.
+
++ request
+
+    + Attributes (Get A List Of Users Request)
+
++ response 404
+The requested employees do not exists
+
+    + Body
+
++ response 200
+The requested employees are found and their details are returned
+
+    + Attributes (array[Get Employee Details Response])
+
+## An Employee's Details [/employee]
 
 ### Get Details [GET]
 Return the information details of an existing employee
@@ -444,7 +466,26 @@ The information of an existing employee with uid the same as JWT_USER_ID in the 
 
     + Body
 
-## Customer Details [/customer]
+## Some Customers' Details [/customer/list]
+
+### Get a List of Customers' Details [POST]
+Return the information details of a list of existing customers.
+
++ request
+
+    + Attributes (Get A List Of Users Request)
+
++ response 404
+The requested customers do not exists
+
+    + Body
+
++ response 200
+The requested customers are found and their details are returned
+
+    + Attributes (array[Get Customer Details Response])
+
+## An Customer's Details [/customer]
 
 ### Get Details [GET]
 Return the information details of an existing customer
@@ -510,7 +551,7 @@ The information of an existing customer with uid the same as JWT_USER_ID in the 
 
 # Group Convert Account
 
-## Customer Account [/employee]
+## Customer Account [/customer/employee]
 
 ### Convert Employee Account [POST]
 Make an existing employee account to also be a customer account
