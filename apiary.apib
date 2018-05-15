@@ -158,16 +158,14 @@ Usually happens when creating a resource that already exists.
 
     + Attributes (Create Employee Request)
 
-+ response 201
-An employee account has been created.\
-\
++ response 201 (application/json)
+An employee account has been created.  
 The details of the newly created employee is returned.
 
     + Attributes (Get Employee Details Response)
 
-+ response 200
-An employee account already exists.\
-\
++ response 200 (application/json)
+An employee account already exists.  
 The details of the existing employee is returned.
 
     + Attributes (Get Employee Details Response)
@@ -179,23 +177,20 @@ The details of the existing employee is returned.
 
     + Attributes (Create Customer Request)
 
-+ response 201
-A customer account has been created.\
-\
++ response 201 (application/json)
+A customer account has been created.  
 The details of the newly created customer is returned.
 
     + Attributes (Get Customer Details Response)
 
-+ response 302
-An employee account already exists under the same email.\
-\
++ response 302 (application/json)
+An employee account already exists under the same email.   
 The uid of the existing employee is returned.
 
     + Attributes (Create Account Response)
 
-+ response 409
-A customer account already exists under the same email.\
-\
++ response 409 (application/json)
+A customer account already exists under the same email.  
 The uid of the existing customer is returned.
 
     + Attributes (Create Account Response)
@@ -209,7 +204,7 @@ The uid of the existing customer is returned.
 
     + Attributes (Token Request)
 
-+ response 201
++ response 201 (application/json)
 A JWT token has been successfully created.
 
     + Attributes (Authentication Response)
@@ -237,7 +232,7 @@ Only registered customer can login in this way.
 
     + Attributes (Token Request)
 
-+ response 201
++ response 201 (application/json)
 A JWT token has been successfully created.
 
     + Attributes (Authentication Response)
@@ -392,15 +387,15 @@ Return the information details of a list of existing employees.
 
     + Attributes (Get A List Of Users Request)
 
++ response 200 (application/json)
+The requested employees are found and their details are returned
+
+    + Attributes (array[Get Employee Details Response])
+
 + response 404
 The requested employees do not exists
 
     + Body
-
-+ response 200
-The requested employees are found and their details are returned
-
-    + Attributes (array[Get Employee Details Response])
 
 ## An Employee's Details [/employee]
 
@@ -413,6 +408,12 @@ Return the information details of an existing employee
 
             JWT_USER_ID: 1 - The uid of an existing employee
             JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
+
++ response 200 (application/json)
+The requested employee is found and his/her details are returned
+
+    + Attributes (Get Employee Details Response)
 
 + response 400
 The Jwt Token header metadata inside the Http header is malformed
@@ -428,11 +429,6 @@ The Jwt token header metadata is not valid
 The requested employee does not exists
 
     + Body
-
-+ response 200
-The requested employee is found and his/her details are returned
-
-    + Attributes (Get Employee Details Response)
 
 ### Update Details [PUT]
 Update the information of an existing employee
@@ -475,15 +471,15 @@ Return the information details of a list of existing customers.
 
     + Attributes (Get A List Of Users Request)
 
++ response 200 (application/json)
+The requested customers are found and their details are returned
+
+    + Attributes (array[Get Customer Details Response])
+
 + response 404
 The requested customers do not exists
 
     + Body
-
-+ response 200
-The requested customers are found and their details are returned
-
-    + Attributes (array[Get Customer Details Response])
 
 ## An Customer's Details [/customer]
 
@@ -496,6 +492,11 @@ Return the information details of an existing customer
 
             JWT_USER_ID: 1 - The uid of an existing customer
             JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 200 (application/json)
+The requested customer is found and his/her details are returned
+
+    + Attributes (Get Customer Details Response)
 
 + response 400
 The Jwt Token header metadata inside the Http header is malformed
@@ -512,11 +513,6 @@ The requested employee does not exists
 
     + Body
 
-+ response 200
-The requested customer is found and his/her details are returned
-
-    + Attributes (Get Customer Details Response)
-
 ### Update Details [PUT]
 Update the information of an existing customer
 
@@ -528,6 +524,11 @@ Update the information of an existing customer
 
             JWT_USER_ID: 1 - The uid of an existing customer
             JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 201
+The information of an existing customer with uid the same as JWT_USER_ID in the HTTP header is updated
+
+    + Body
 
 + response 400
 The Jwt Token header metadata inside the Http header is malformed
@@ -541,11 +542,6 @@ The Jwt token header metadata is not valid
 
 + response 404
 The employee requires information update does not exists
-
-    + Body
-
-+ response 201
-The information of an existing customer with uid the same as JWT_USER_ID in the HTTP header is updated
 
     + Body
 
@@ -569,4 +565,3 @@ A customer account is successfully created from the existing employee account
 Failed to create a customer account using the existing employee account
 
     + Body
-
