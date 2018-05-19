@@ -101,7 +101,21 @@ Usually happens when creating a resource that already exists.
 
 ### Update Customer Details Request (Update Employee Details Request)
 + credit: 300 (number) - The new credit of an existing customer at Apointer.ca
-+ registered: `false` (boolean) - The registration status of an existing customer (true - registered, false - unregistered)
+
+### Update Employee Details Response (object)
++ uid: 1 (number, required) - The uid of an existing user
++ email: `newemail@apointer.ca` (string) - The new email of an existing user
++ avatar: `https://s3.amazonaws.com/bucket/path/newavatar.png` (string) - The new avatar of an existing user
++ phone: `4163589950` (string) - The new phone number of an existing user
++ firstName: `Olivia` (string) - The new firstName of an existing user
++ lastName: `Cooke` (string) - The new lastName of an existing user
++ gender: `false` (boolean) - The new gender of an existing user (true - Male, false - Female))
++ dob: 1452893216 (number) - The new date of birth of an existing user in Unix timestamp
++ status: 2 (number) - The new status of an existing user account
++ address (New Address) - The new address of an existing user
+
+### Update Customer Details Response (Update Employee Details Response)
++ credit: 100 (number, required) - The new credit of an existing customer at Apointer.ca
 
 ### Create Reset Password Code Request (object)
 + email: `test@apointer` (string, required) - The email address of a user
@@ -109,6 +123,9 @@ Usually happens when creating a resource that already exists.
 ### Reset Password Request (object)
 + resetPasswordCode: `MToxNTI0OTQ4NDE0` (string, required) - A reset password code which was sent out previously
 + newPassword: `apointerca` (string, required) - A new password which a user wants to set to
+
+### Convert Employee Account Request (object)
++ uid: 1 (number, required) - The unique uid of an employee
 
 ### Create Account Response (object)
 + uid: 1 (number, required) - The unique uid of an user
@@ -146,8 +163,11 @@ Usually happens when creating a resource that already exists.
 + email: `test@apointer.ca` (string, required)
 + password: `mypassword` (string, required)
 
-### Activation Request
+### Activation Request (object)
 + activationCode: `MToxNTI0OTQ4NDE0` (string, required) - An activation code that is used to activate an account
+
+### Employee Activation Request (Activation Request)
++ newPassword: `newPassword` (string, required) - The new password of the employee account to be activated
 
 # Group Create User
 
@@ -254,7 +274,7 @@ The requested customer account is not activated.
 
 # Group Forgot Password
 
-## Employee Password [/employee/resetpassword/]
+## Employee Password [/employee/password/]
 
 ### Create Reset Password Code [POST]
 Sent a reset password code to a registered employee
@@ -295,7 +315,7 @@ Password failed to be reset
 
     + Body
 
-## Customer Password [/customer/resetpassword/]
+## Customer Password [/customer/password/]
 
 ### Create Reset Password Code [POST]
 Sent a reset password code to a registered customer
@@ -345,15 +365,15 @@ Based on an activation code to activate an employee account
 
 + request
 
-    + Attributes (Activation Request)
+    + Attributes (Employee Activation Request)
 
 + response 200
-The account is successfully activated.
+The account is successfully activated and new password is set.
 
     + Body
 
 + response 406
-The account cannot be activated.
+The account is not activated and new password is not set.
 
     + Body
 
@@ -406,8 +426,13 @@ Return the information details of an existing employee
 
     + Headers
 
-            JWT_USER_ID: 1 - The uid of an existing employee
-            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+            uid: 1 - The uid of an existing employee
+            tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 200
+The requested employee is found and his/her details are returned
+
+    + Attributes (Get Employee Details Response)
 
 
 + response 200 (application/json)
@@ -439,8 +464,14 @@ Update the information of an existing employee
 
     + Headers
 
-            JWT_USER_ID: 1 - The uid of an existing employee
-            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+            uid: 1 - The uid of an existing employee
+            tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 201
+The information of an existing employee with uid the same as the uid in the HTTP header is updated
+and his/her new details are returned.
+
+    + Attributes (Update Employee Details Response)
 
 + response 400
 The Jwt Token header metadata inside the Http header is malformed
@@ -454,11 +485,6 @@ The Jwt token header metadata is not valid
 
 + response 404
 The employee requires information update does not exists
-
-    + Body
-
-+ response 201
-The information of an existing employee with uid the same as JWT_USER_ID in the HTTP header is updated
 
     + Body
 
@@ -490,8 +516,13 @@ Return the information details of an existing customer
 
     + Headers
 
-            JWT_USER_ID: 1 - The uid of an existing customer
-            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+            uid: 1 - The uid of an existing customer
+            tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 200
+The requested customer is found and his/her details are returned
+
+    + Attributes (Get Customer Details Response)
 
 + response 200 (application/json)
 The requested customer is found and his/her details are returned
@@ -522,8 +553,14 @@ Update the information of an existing customer
 
     + Headers
 
-            JWT_USER_ID: 1 - The uid of an existing customer
-            JWT_TOKEN_TYPE: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+            uid: 1 - The uid of an existing customer
+            tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
+
++ response 201
+The information of an existing customer with uid the same as the uid in the HTTP header is updated
+and his/her new details are returned.
+
+    + Attributes (Update Customer Details Response)
 
 + response 201
 The information of an existing customer with uid the same as JWT_USER_ID in the HTTP header is updated
@@ -554,7 +591,7 @@ Make an existing employee account to also be a customer account
 
 + request
 
-    + Attributes (Create Account Response)
+    + Attributes (Convert Employee Account Request)
 
 + response 201
 A customer account is successfully created from the existing employee account
