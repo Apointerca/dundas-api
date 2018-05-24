@@ -53,6 +53,9 @@ Usually happens when creating a resource that already exists.
 
 # Data Structure
 
+### Upload Avatar Response (object)
++ avatar: `https://s3.amazonaws.com/bucket/path/avatar.png` (string, required) - The avatar of an existing user
+
 ### Get A List Of Users Request (object)
 + uids: 1 (array[number], required) - A list of uids of some existing users
 
@@ -90,7 +93,6 @@ Usually happens when creating a resource that already exists.
 ### Update Employee Details Request (object)
 + email: `newemail@apointer.ca` (string) - The new email of an existing user
 + password: `apointerissoawesome` (string) - The new password of an existing user
-+ avatar: `https://s3.amazonaws.com/bucket/path/newavatar.png` (string) - The new avatar of an existing user
 + phone: `4163589950` (string) - The new phone number of an existing user
 + firstName: `Olivia` (string) - The new firstName of an existing user
 + lastName: `Cooke` (string) - The new lastName of an existing user
@@ -174,18 +176,20 @@ Usually happens when creating a resource that already exists.
 ## Employee [/employee]
 
 ### Create Employee [POST]
-+ request
++ request (application/json)
 
     + Attributes (Create Employee Request)
 
 + response 201 (application/json)
-An employee account has been created.  
+An employee account has been created.\
+\
 The details of the newly created employee is returned.
 
     + Attributes (Get Employee Details Response)
 
 + response 200 (application/json)
-An employee account already exists.  
+An employee account already exists.\
+\
 The details of the existing employee is returned.
 
     + Attributes (Get Employee Details Response)
@@ -193,24 +197,27 @@ The details of the existing employee is returned.
 ## Customer [/customer]
 
 ### Create Customer [POST]
-+ request
++ request (application/json)
 
     + Attributes (Create Customer Request)
 
 + response 201 (application/json)
-A customer account has been created.  
+A customer account has been created.\
+\
 The details of the newly created customer is returned.
 
     + Attributes (Get Customer Details Response)
 
 + response 302 (application/json)
-An employee account already exists under the same email.   
+An employee account already exists under the same email.\
+\
 The uid of the existing employee is returned.
 
     + Attributes (Create Account Response)
 
 + response 409 (application/json)
-A customer account already exists under the same email.  
+A customer account already exists under the same email.\
+\
 The uid of the existing customer is returned.
 
     + Attributes (Create Account Response)
@@ -220,7 +227,7 @@ The uid of the existing customer is returned.
 ## Employee Token [/employee/token]
 
 ### Employee Login [POST]
-+ request
++ request (application/json)
 
     + Attributes (Token Request)
 
@@ -248,7 +255,7 @@ The requested employee account is not activated.
 Only registered customer can login in this way.
 
 ### Customer Login [POST]
-+ request
++ request (application/json)
 
     + Attributes (Token Request)
 
@@ -279,7 +286,7 @@ The requested customer account is not activated.
 ### Create Reset Password Code [POST]
 Sent a reset password code to a registered employee
 
-+ request
++ request (application/json)
 
     + Attributes (Create Reset Password Code Request)
 
@@ -296,7 +303,7 @@ Password reset code failed to be sent out.
 ### Reset Account Password [PUT]
 Reset password for a registered employee
 
-+ request
++ request (application/json)
 
     + Attributes (Reset Password Request)
 
@@ -320,7 +327,7 @@ Password failed to be reset
 ### Create Reset Password Code [POST]
 Sent a reset password code to a registered customer
 
-+ request
++ request (application/json)
 
     + Attributes (Create Reset Password Code Request)
 
@@ -337,7 +344,7 @@ Password reset code failed to be sent out.
 ### Reset Account Password [PUT]
 Reset password for a registered customer
 
-+ request
++ request (application/json)
 
     + Attributes (Reset Password Request)
 
@@ -363,7 +370,7 @@ Password failed to be reset
 ### Activate Employee Account [PUT]
 Based on an activation code to activate an employee account
 
-+ request
++ request (application/json)
 
     + Attributes (Employee Activation Request)
 
@@ -382,7 +389,7 @@ The account is not activated and new password is not set.
 ### Activate Customer Account [PUT]
 Based on an activation code to activate a customer account
 
-+ request
++ request (application/json)
 
     + Attributes (Activation Request)
 
@@ -403,7 +410,7 @@ The account cannot be activated.
 ### Get a List of Employees' Details [POST]
 Return the information details of a list of existing employees.
 
-+ request
++ request (application/json)
 
     + Attributes (Get A List Of Users Request)
 
@@ -429,12 +436,6 @@ Return the information details of an existing employee
             uid: 1 - The uid of an existing employee
             tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
 
-+ response 200
-The requested employee is found and his/her details are returned
-
-    + Attributes (Get Employee Details Response)
-
-
 + response 200 (application/json)
 The requested employee is found and his/her details are returned
 
@@ -458,7 +459,7 @@ The requested employee does not exists
 ### Update Details [PUT]
 Update the information of an existing employee
 
-+ request
++ request (application/json)
 
     + Attributes (Update Employee Details Request)
 
@@ -467,7 +468,7 @@ Update the information of an existing employee
             uid: 1 - The uid of an existing employee
             tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
 
-+ response 201
++ response 201 (application/json)
 The information of an existing employee with uid the same as the uid in the HTTP header is updated
 and his/her new details are returned.
 
@@ -493,7 +494,7 @@ The employee requires information update does not exists
 ### Get a List of Customers' Details [POST]
 Return the information details of a list of existing customers.
 
-+ request
++ request (application/json)
 
     + Attributes (Get A List Of Users Request)
 
@@ -519,11 +520,6 @@ Return the information details of an existing customer
             uid: 1 - The uid of an existing customer
             tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
 
-+ response 200
-The requested customer is found and his/her details are returned
-
-    + Attributes (Get Customer Details Response)
-
 + response 200 (application/json)
 The requested customer is found and his/her details are returned
 
@@ -547,7 +543,7 @@ The requested employee does not exists
 ### Update Details [PUT]
 Update the information of an existing customer
 
-+ request
++ request (application/json)
 
     + Attributes (Update Customer Details Request)
 
@@ -556,16 +552,11 @@ Update the information of an existing customer
             uid: 1 - The uid of an existing customer
             tokentype: VALID - The type of a Jwt Token (VALID, EMPTY, FAKE, EXPIRED)
 
-+ response 201
++ response 201 (application/json)
 The information of an existing customer with uid the same as the uid in the HTTP header is updated
 and his/her new details are returned.
 
     + Attributes (Update Customer Details Response)
-
-+ response 201
-The information of an existing customer with uid the same as JWT_USER_ID in the HTTP header is updated
-
-    + Body
 
 + response 400
 The Jwt Token header metadata inside the Http header is malformed
@@ -589,7 +580,7 @@ The employee requires information update does not exists
 ### Convert Employee Account [POST]
 Make an existing employee account to also be a customer account
 
-+ request
++ request (application/json)
 
     + Attributes (Convert Employee Account Request)
 
@@ -602,3 +593,100 @@ A customer account is successfully created from the existing employee account
 Failed to create a customer account using the existing employee account
 
     + Body
+
+# Group Avatar Operation
+
+## Customer Avatar [/customer/avatar]
+
+### Upload Customer Avatar [POST]
+Upload avatar for a customer.\
+\
+Please use `name=file` and set the `filename` as the original file name.
+Do not forget to set the `Content-Type`.  
+
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="file"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ response 201 (application/json)
+The avatar is successfully uploaded to Amazon S3
+
+    + Attributes (Upload Avatar Response)
+
++ response 400
+JWT token is not proper as either missing uid or token type
+
+    + Body
+
++ response 401
+JWT token is not of type VALID
+
+    + Body
+
++ response 404
+No customer is found for the given uid
+
+    + Body
+
++ response 503
+This means Aws S3 is down, so failed to upload avatar to Amazon S3
+
+    + Body
+
+## Employee Avatar [/employee/avatar]
+
+### Upload Employee Avatar [POST]
+Upload avatar for an employee.\
+\
+Please use `name=file` and set the `filename` as the original file name.
+Do not forget to set the `Content-Type`.  
+
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="file"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ response 201 (application/json)
+The avatar is successfully uploaded to Amazon S3
+
+    + Attributes (Upload Avatar Response)
+
++ response 400
+JWT token is not proper as either missing uid or token type
+
+    + Body
+
++ response 401
+JWT token is not of type VALID
+
+    + Body
+
++ response 404
+No employee is found for the given uid
+
+    + Body
+
++ response 503
+This means Aws S3 is down, so failed to upload avatar to Amazon S3
+
+    + Body
+
