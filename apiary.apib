@@ -74,7 +74,7 @@ Usually happens when creating a resource that already exists.
 + province: `ON` (string) - The province where this address belongs to
 + zip: `M1N3H8` (string) - The postal code of this address
 
-### Get Employee Details Response (object)
+### Get User Details Response(object)
 + uid: 1 (number, required) - The uid of an existing user
 + email: `test@apointer.ca` (string, required) - The email of an existing user
 + avatar: `https://s3.amazonaws.com/bucket/path/avatar.png` (string) - The avatar of an existing user
@@ -85,6 +85,8 @@ Usually happens when creating a resource that already exists.
 + dob: 1241574849 (number) - The date of birth of an existing user in Unix timestamp
 + status: 1 (number, required) - The status of an existing user account (0 - Not Activated, 1 - Activated, 2 - Locked, 3 - Inactive)
 + address (Existing Address) - The address of an existing user account
+
+### Get Employee Details Response (Get User Details Response)
 
 ### Get Customer Details Response (Get Employee Details Response)
 + credit: 100 (number, required) - The new credit of an existing customer at Apointer.ca
@@ -405,6 +407,25 @@ The account cannot be activated.
 
 # Group Account Details
 
+## Some Users' Details [/user/list]
+
+### Get a List of Users' Details [POST]
+Return the information details of a list of existing users.
+
++ request (application/json)
+
+    + Attributes (Get A List Of Users Request)
+
++ response 200 (application/json)
+The requested users are found and their details are returned
+
+    + Attributes (array[Get User Details Response])
+
++ response 404
+The requested users do not exists
+
+    + Body
+
 ## Some Employees' Details [/employee/list]
 
 ### Get a List of Employees' Details [POST]
@@ -586,6 +607,11 @@ Make an existing employee account to also be a customer account
 
 + response 201
 A customer account is successfully created from the existing employee account
+
+    + Body
+
++ response 404
+The requested existing employee is not found
 
     + Body
 
