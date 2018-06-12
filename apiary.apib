@@ -157,6 +157,9 @@ Usually happens when creating a resource that already exists.
 + firstName: `Rugal` (string, required)
 + avatar: `http://host/path` (string, optional) - The URL of avatar
 
+### Authentication Customer Response (Authentication Response)
++ uid: 1 (number, required) - The id of the successfully authenticated customer
+
 ### Create Employee Request (Create User Request)
 + password: `mypassword` (string, optional) - Leave it null or blank if it is a newly registered employee
 
@@ -204,7 +207,7 @@ The details of the existing employee is returned.
     + Attributes (Create Customer Request)
 
 + response 201 (application/json)
-A customer account has been created.\
+A new customer has been created or an unregistered customer is now registered.\
 \
 The details of the newly created customer is returned.
 
@@ -264,7 +267,7 @@ Only registered customer can login in this way.
 + response 201 (application/json)
 A JWT token has been successfully created.
 
-    + Attributes (Authentication Response)
+    + Attributes (Authentication Customer Response)
 
 + response 401
 Password verfication failed for the requested customer.
